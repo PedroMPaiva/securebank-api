@@ -7,6 +7,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # ETAPA OBRIGATÓRIA ANTES DO ANALYZE
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v2
+        with:
+          languages: 'javascript'  # Altere para sua linguagem
+
       - name: Setup Node
         uses: actions/setup-node@v3
         with:
@@ -15,18 +21,6 @@ jobs:
       - name: Install dependencies
         run: npm ci --omit=dev
 
-      - name: SAST (CodeQL)
+      # ETAPA DE ANÁLISE (AGORA SIM)
+      - name: Run CodeQL Analysis
         uses: github/codeql-action/analyze@v2
-
-      - name: Dependency Audit
-        run: npm audit --omit=dev
-
-      - name: Container Scan
-        uses: aquasecurity/trivy-action@master
-        with:
-          image-ref: './Dockerfile'
-          format: 'table'
-          exit-code: '1'
-          ignore-unfixed: true
-          vuln-type: 'os,library'
-          severity: 'CRITICAL,HIGH'

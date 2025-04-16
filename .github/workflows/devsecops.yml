@@ -10,6 +10,9 @@ permissions:
   actions: read
   contents: read
 
+env:  # Adicionado esta seção GLOBAL para todas as jobs
+  JWT_SECRET: ${{ secrets.JWT_SECRET }}
+
 jobs:
   CodeQL-Analysis:
     name: CodeQL
@@ -20,16 +23,25 @@ jobs:
         with:
           fetch-depth: 2
 
+      #  Adicionado esta etapa para testar seu código com a secret
+      - name: Run Security Tests
+        run: |
+          if [ -z "$JWT_SECRET" ]; then
+            echo "::error::JWT_SECRET não configurada!"
+            exit 1
+          fi
+          npm test  # Ou seu comando de teste customizado
+
       - name: Initialize CodeQL
-        uses: github/codeql-action/init@v2
+        uses: github/codeql-action/init@v3
         with:
           languages: 'javascript'
           queries: security-extended
 
       - name: Autobuild
-        uses: github/codeql-action/autobuild@v2
+        uses: github/codeql-action/autobuild@v3
 
       - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v2
+        uses: github/codeql-action/analyze@v3
         with:
           category: "/language:javascript"

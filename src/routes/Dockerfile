@@ -1,4 +1,5 @@
-FROM node:14 # 🔴 Versão desatualizada
+# 🔴 Versão desatualizada
+FROM node:14 
 
 WORKDIR /app
 COPY . .

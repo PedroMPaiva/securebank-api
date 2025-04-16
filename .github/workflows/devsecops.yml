@@ -30,7 +30,7 @@ jobs:
             echo "::error::JWT_SECRET não configurada!"
             exit 1
           fi
-          npm test  # Ou seu comando de teste customizado
+          npm run test:security
 
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v3

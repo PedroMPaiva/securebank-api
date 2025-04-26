@@ -56,7 +56,7 @@ jobs:
           fetch-depth: 0  # Importante para escanear todo o histórico
 
       - name: Run GitGuardian Scan
-        uses: GitGuardian/ggshield-action@v2
+        uses: GitGuardian/ggshield-action@v2.12.0
         with:
           scan-type: "repo"
           exit-zero: false  # Falha o job se encontrar secrets

@@ -46,17 +46,20 @@ jobs:
           category: "/language:javascript"
 
   secrets-scan:
-    name: GitGuardian Scan
     runs-on: ubuntu-latest
-    permissions:  # Adicione isso!
+    permissions:
       contents: read
       security-events: write
+      actions: read
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 0
-          
+          fetch-depth: 0  # Crucial para scan completo
+
       - name: GitGuardian Scan
-        uses: GitGuardian/ggshield-action@v2  # Sem versão patch
+        uses: GitGuardian/ggshield-action@v2.13.0
+        with:
+          scan-type: "repo"
+          exit-zero: false
         env:
           GITGUARDIAN_API_KEY: ${{ secrets.GITGUARDIAN_API_KEY }}

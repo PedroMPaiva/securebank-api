@@ -1,21 +1,21 @@
 name: DevSecOps Pipeline
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 permissions:
   security-events: write
   actions: read
   contents: read
 
-env:  # Adicionado esta seção GLOBAL para todas as jobs
+env:
   JWT_SECRET: ${{ secrets.JWT_SECRET }}
 
 jobs:
-  CodeQL-Analysis:
-    name: CodeQL
+  codeql-analysis:
+    name: CodeQL Analysis
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -23,7 +23,6 @@ jobs:
         with:
           fetch-depth: 2
 
-      #  Adicionado esta etapa para testar seu código com a secret
       - name: Run Security Tests
         run: |
           if [ -z "$JWT_SECRET" ]; then
@@ -45,3 +44,21 @@ jobs:
         uses: github/codeql-action/analyze@v3
         with:
           category: "/language:javascript"
+
+  secrets-scan:
+    name: GitGuardian Scan
+    runs-on: ubuntu-latest
+    needs: codeql-analysis  # Espera o job CodeQL terminar
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Importante para escanear todo o histórico
+
+      - name: Run GitGuardian Scan
+        uses: GitGuardian/ggshield-action@v2
+        with:
+          scan-type: "repo"
+          exit-zero: false  # Falha o job se encontrar secrets
+        env:
+          GITGUARDIAN_API_KEY: ${{ secrets.GITGUARDIAN_API_KEY }}  # Nome padronizado

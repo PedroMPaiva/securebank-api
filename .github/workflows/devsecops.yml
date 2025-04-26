@@ -46,20 +46,24 @@ jobs:
           category: "/language:javascript"
 
   secrets-scan:
+    name: GitGuardian Scan
     runs-on: ubuntu-latest
+    needs: codeql-analysis  # Executa após o CodeQL
     permissions:
       contents: read
       security-events: write
-      actions: read
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # Crucial para scan completo
+          fetch-depth: 0  # Para scan completo do histórico
 
-      - name: GitGuardian Scan
-        uses: GitGuardian/ggshield-action@v2.13.0
-        with:
-          scan-type: "repo"
-          exit-zero: false
-        env:
-          GITGUARDIAN_API_KEY: ${{ secrets.GITGUARDIAN_API_KEY }}
+      # Solução definitiva usando Docker oficial
+      - name: Run GGShield Scan
+        run: |
+          docker run --rm -v "$(pwd):/data" \
+            -e GITGUARDIAN_API_KEY="${{ secrets.GITGUARDIAN_API_KEY }}" \
+            gitguardian/ggshield:latest \
+            scan repo /data \
+            --exit-zero=false \
+            --show-secrets

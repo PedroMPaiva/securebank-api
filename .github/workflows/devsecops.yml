@@ -61,9 +61,8 @@ jobs:
       # Solução definitiva usando Docker oficial
       - name: Run GGShield Scan
         run: |
-          docker run --rm -v "$(pwd):/data" \
+          docker run --rm \
+            -v "$(pwd):/data" \
             -e GITGUARDIAN_API_KEY="${{ secrets.GITGUARDIAN_API_KEY }}" \
             gitguardian/ggshield:latest \
-            scan repo /data \
-            --exit-zero=false \
-            --show-secrets
+            /bin/bash -c "ggshield scan repo /data --exit-zero=false --show-secrets"

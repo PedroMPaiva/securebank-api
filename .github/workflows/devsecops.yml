@@ -60,7 +60,7 @@ jobs:
           fetch-depth: 0  # Para scan completo do histórico
 
       - name: GitGuardian scan
-        uses: GitGuardian/ggshield/actions/secret@v1.38.1
+        uses: GitGuardian/ggshield-action@v1.38.1
         env:
           GITHUB_PUSH_BEFORE_SHA: ${{ github.event.before }}
           GITHUB_PUSH_BASE_SHA: ${{ github.event.base }}

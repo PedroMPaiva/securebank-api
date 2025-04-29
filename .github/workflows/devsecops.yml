@@ -60,12 +60,8 @@ jobs:
           fetch-depth: 0  # Para scan completo do histórico
 
       - name: GitGuardian scan
-        uses: GitGuardian/ggshield-action@v1.38.1
+        uses: GitGuardian/ggshield/actions/secret@v1.38.0
         env:
-          GITHUB_PUSH_BEFORE_SHA: ${{ github.event.before }}
-          GITHUB_PUSH_BASE_SHA: ${{ github.event.base }}
-          GITHUB_PULL_BASE_SHA: ${{ github.event.pull_request.base.sha }}
-          GITHUB_DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
           GITGUARDIAN_API_KEY: ${{ secrets.GITGUARDIAN_API_KEY }}
         with:
           exit_zero: false  # Para não falhar o workflow se encontrar segredos

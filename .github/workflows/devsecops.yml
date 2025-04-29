@@ -9,6 +9,7 @@ permissions:
   security-events: write
   actions: read
   contents: read
+  pull-requests: write
 
 env:
   JWT_SECRET: ${{ secrets.JWT_SECRET }}

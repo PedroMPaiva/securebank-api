@@ -62,9 +62,9 @@ jobs:
       - name: Run GitGuardian Scan
         run: |
           docker run --rm \
-            -v "$(pwd):/data" \
-            -e GITGUARDIAN_API_KEY="${{ secrets.GITGUARDIAN_API_KEY }}" \
-            gitguardian/ggshield:latest \
-            ggshield scan repo /data \
-            --exit-zero=false \
-            --show-secrets \
+          -v "$(pwd):/data" \
+          -e GITGUARDIAN_API_KEY="${{ secrets.GITGUARDIAN_API_KEY }}" \
+          gitguardian/ggshield:latest \
+          ggshield scan repository /data \
+          --exit-zero=false \
+          --show-secrets

@@ -60,7 +60,7 @@ jobs:
           fetch-depth: 0  # Para scan completo do histórico
 
       - name: GitGuardian scan
-        uses: GitGuardian/ggshield/actions/secret@v1.38.0
+        uses: GitGuardian/ggshield-action@v2
         env:
           GITGUARDIAN_API_KEY: ${{ secrets.GITGUARDIAN_API_KEY }}
         with:

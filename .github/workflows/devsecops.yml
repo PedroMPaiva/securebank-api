@@ -13,6 +13,8 @@ permissions:
 
 env:
   JWT_SECRET: ${{ secrets.JWT_SECRET }}
+  ACTIONS_STEP_DEBUG: true
+  GGDEBUG: true
 
 jobs:
   codeql-analysis:
@@ -68,8 +70,8 @@ jobs:
 
       - name: Run Repository Scan
         run: |
-          ggshield scan repository \
-            --exit-zero=false \
-            --show-secrets \
-            --api-key="${{ secrets.GITGUARDIAN_API_KEY }}" \
-            .
+          docker run --rm \
+          -v "$(pwd):/data" \
+          -e GITGUARDIAN_API_KEY="${{ secrets.GITGUARDIAN_API_KEY }}" \
+          gitguardian/ggshield:latest \
+          /bin/bash -c "ggshield install && ggshield scan repository /data --exit-zero=false"

@@ -58,20 +58,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # Necessário para scan completo
+          fetch-depth: 0
 
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.10'
-
-      - name: Install latest GGShield
-        run: pip install ggshield
-
-      - name: Run Repository Scan
+      - name: Run GitGuardian Scan
         run: |
           docker run --rm \
-          -v "$(pwd):/data" \
-          -e GITGUARDIAN_API_KEY="${{ secrets.GITGUARDIAN_API_KEY }}" \
-          gitguardian/ggshield:latest \
-          /bin/bash -c "ggshield install && ggshield scan repository /data --exit-zero=false"
+            -v "$(pwd):/data" \
+            -e GITGUARDIAN_API_KEY="${{ secrets.GITGUARDIAN_API_KEY }}" \
+            gitguardian/ggshield:latest \
+            ggshield scan repository /data \
+            --exit-zero=false \
+            --show-secrets

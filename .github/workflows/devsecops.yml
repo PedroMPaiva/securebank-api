@@ -54,17 +54,22 @@ jobs:
       contents: read
       security-events: write
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Run GitGuardian Scan
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install GGShield
+        run: pip install ggshield
+
+      - name: Run Repository Scan
         run: |
-          docker run --rm \
-          -v "$(pwd):/data" \
-          -e GITGUARDIAN_API_KEY="${{ secrets.GITGUARDIAN_API_KEY }}" \
-          gitguardian/ggshield:latest \
-          ggshield scan repository /data \
-          --exit-zero=false \
-          --show-secrets
+          ggshield scan repository \
+            --exit-zero=false \
+            --show-secrets \
+            --api-key="${{ secrets.GITGUARDIAN_API_KEY }}" \
+            .

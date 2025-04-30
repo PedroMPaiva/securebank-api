@@ -58,18 +58,14 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.10'
-
-      - name: Install GGShield
-        run: pip install ggshield
+      - name: Install GGShield with specific version
+        run: pip install ggshield==1.14.0  # Versão estável comprovada
 
       - name: Run Repository Scan
         run: |
-          ggshield scan repository \
-            --exit-zero=false \
+          ggshield scan \
+            --mode repository \
+            --exit-zero \
             --show-secrets \
-            --api-key="${{ secrets.GITGUARDIAN_API_KEY }}" \
+            --api-key "${{ secrets.GITGUARDIAN_API_KEY }}" \
             .
